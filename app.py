@@ -195,9 +195,14 @@ try:
             mode="lines", name="Probabilità LONG"
         ))
         fig_p.add_hline(y=0.50, line_dash="dash")
+        p_min = predictions["probability_long"].min()
+        p_max = predictions["probability_long"].max()
+        margine = max((p_max - p_min) * 0.15, 0.001)
+
         fig_p.update_layout(
-            xaxis_title="Data", yaxis_title="Probabilità",
-            yaxis=dict(range=[0, 1])
+            xaxis_title="Data",
+            yaxis_title="Probabilità LONG",
+            yaxis=dict(range=[p_min - margine, p_max + margine])
         )
         st.plotly_chart(fig_p, use_container_width=True)
 
