@@ -183,6 +183,9 @@ try:
         ))
         fig_dd.update_layout(xaxis_title="Data", yaxis_title="Punti")
         st.plotly_chart(fig_dd, use_container_width=True)
+        st.write("Distribuzione probabilità LONG")
+        st.write(predictions["probability_long"].describe())
+        st.write("Valori distinti:", predictions["probability_long"].nunique())
 
         st.subheader("Probabilità LONG")
         fig_p = go.Figure()
