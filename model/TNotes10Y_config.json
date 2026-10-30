@@ -1,0 +1,23 @@
+{
+    "model": "CatBoostClassifier",
+    "iterations": 1,
+    "depth": 5,
+    "learning_rate": 0.03,
+    "l2_leaf_reg": 5,
+    "random_seed": 42,
+    "features": [
+        "ret_1",
+        "ret_2",
+        "ret_5",
+        "ret_10",
+        "ret_20",
+        "vol_5",
+        "vol_10",
+        "vol_20",
+        "atr14_pct",
+        "dist_high_10",
+        "dist_low_10",
+        "dist_high_20",
+        "dist_low_20"
+    ]
+}
