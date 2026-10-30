@@ -20,7 +20,7 @@ st.caption("CatBoost classification model | 10-Year US Treasury Note Futures")
 def download_data():
     raw = yf.download(
         "ZN=F",
-        period="2y",
+        period="3y",
         interval="1d",
         auto_adjust=False,
         progress=False
