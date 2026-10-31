@@ -197,6 +197,23 @@ try:
         else:
             st.warning("Nessun trade OOS nel periodo selezionato.")
 
+        if not oos_trades.empty:
+            st.subheader("Equity curve OOS")
+            fig_oos = go.Figure()
+            fig_oos.add_trace(go.Scatter(
+                x=oos_equity.index,
+                y=oos_equity.values,
+                mode="lines",
+                name="Equity netta OOS"
+            ))
+            fig_oos.update_layout(
+                xaxis_title="Data",
+                yaxis_title="Punti",
+                hovermode="x unified"
+            )
+            st.plotly_chart(fig_oos, use_container_width=True)
+
+
 
         st.subheader("Equity curve")
         fig = go.Figure()
@@ -264,4 +281,8 @@ try:
 except Exception as e:
     st.error(f"Errore: {e}")
     st.exception(e)
+
+
+
+
 
