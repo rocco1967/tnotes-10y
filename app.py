@@ -136,7 +136,7 @@ try:
         cost = st.sidebar.number_input(
             "Costo round-trip (punti)",
             min_value=0.0,
-            value=0.0,
+            value=0.03,
             step=0.01
         )
 
@@ -162,6 +162,29 @@ try:
         c3.metric("Max drawdown (punti)", f"{max_dd:.2f}")
         c4.metric("Trade positivi", f"{win_rate:.1f}%")
 
+        # Metriche esclusivamente out-of-sample dal 03/01/2023
+        st.subheader("Risultati out-of-sample — dal 03/01/2023")
+
+        oos_trades = trades[
+            pd.to_datetime(trades["Signal date"]) >= pd.Timestamp("2023-01-03")
+        ].copy()
+
+        if not oos_trades.empty:
+            oos_daily = pd.Series(0.0, index=prices.index)
+            oos_pnl_by_date = oos_trades.groupby("Exit date")["Net PnL"].sum()
+            oos_daily.loc[oos_pnl_by_date.index] = oos_pnl_by_date
+
+            oos_equity = oos_daily.cumsum()
+            oos_drawdown = oos_equity - oos_equity.cummax()
+
+            o1, o2, o3 = st.columns(3)
+            o1.metric("Trade OOS", f"{len(oos_trades)}")
+            o2.metric("P&L netto OOS (punti)", f"{oos_trades['Net PnL'].sum():.2f}")
+            o3.metric("Max drawdown OOS (punti)", f"{oos_drawdown.min():.2f}")
+        else:
+            st.warning("Nessun trade OOS nel periodo selezionato.")
+
+
         st.subheader("Equity curve")
         fig = go.Figure()
         fig.add_trace(go.Scatter(
@@ -183,9 +206,6 @@ try:
         ))
         fig_dd.update_layout(xaxis_title="Data", yaxis_title="Punti")
         st.plotly_chart(fig_dd, use_container_width=True)
-        st.write("Distribuzione probabilità LONG")
-        st.write(predictions["probability_long"].describe())
-        st.write("Valori distinti:", predictions["probability_long"].nunique())
 
         st.subheader("Probabilità LONG")
         fig_p = go.Figure()
@@ -195,14 +215,9 @@ try:
             mode="lines", name="Probabilità LONG"
         ))
         fig_p.add_hline(y=0.50, line_dash="dash")
-        p_min = predictions["probability_long"].min()
-        p_max = predictions["probability_long"].max()
-        margine = max((p_max - p_min) * 0.15, 0.001)
-
         fig_p.update_layout(
-            xaxis_title="Data",
-            yaxis_title="Probabilità LONG",
-            yaxis=dict(range=[p_min - margine, p_max + margine])
+            xaxis_title="Data", yaxis_title="Probabilità",
+            yaxis=dict(range=[0, 1])
         )
         st.plotly_chart(fig_p, use_container_width=True)
 
@@ -237,5 +252,7 @@ except Exception as e:
     st.error(f"Errore: {e}")
     st.exception(e)
 
-   
-   
+
+
+
+
