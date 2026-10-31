@@ -47,51 +47,57 @@ def load_model():
     model.load_model("model/TNotes10Y_CatBoost.cbm")
     return model
 
+
 def make_backtest(prices, probabilities, cost):
     data = prices.copy()
     data["probability_long"] = probabilities
-    data["signal"] = np.where(data["probability_long"] >= 0.50, 1, -1)
 
     trades = []
     i = 0
     n = len(data)
 
-    while i + HOLDING < n:
-        direction = int(data["signal"].iloc[i])
+    while i < n - 1:
         entry_i = i + 1
-        last_i = i + HOLDING
+        side = 1 if data["probability_long"].iloc[i] >= 0.50 else -1
 
         entry = float(data["open"].iloc[entry_i])
-        stop_price = entry - STOP if direction == 1 else entry + STOP
+        stop_price = entry - side * STOP
 
-        exit_i = last_i
-        exit_price = float(data["close"].iloc[last_i])
-        reason = "Scadenza 5 sessioni"
+        exit_price = None
+        reason = None
 
-        for j in range(entry_i, last_i + 1):
-            low = float(data["low"].iloc[j])
-            high = float(data["high"].iloc[j])
+        for j in range(entry_i, min(entry_i + HOLDING, n)):
+            o = float(data["open"].iloc[j])
+            h = float(data["high"].iloc[j])
+            l = float(data["low"].iloc[j])
 
-            if direction == 1 and low <= stop_price:
+            if side == 1:
+                if o <= stop_price:
+                    exit_price, reason = o, "Stop gap"
+                elif l <= stop_price:
+                    exit_price, reason = stop_price, "Stop"
+            else:
+                if o >= stop_price:
+                    exit_price, reason = o, "Stop gap"
+                elif h >= stop_price:
+                    exit_price, reason = stop_price, "Stop"
+
+            if exit_price is not None:
                 exit_i = j
-                exit_price = stop_price
-                reason = "Stop"
                 break
+        else:
+            exit_i = min(entry_i + HOLDING - 1, n - 1)
+            exit_price = float(data["close"].iloc[exit_i])
+            reason = "Scadenza 5 sessioni"
 
-            if direction == -1 and high >= stop_price:
-                exit_i = j
-                exit_price = stop_price
-                reason = "Stop"
-                break
-
-        gross = direction * (exit_price - entry)
+        gross = side * (exit_price - entry)
         net = gross - cost
 
         trades.append({
             "Signal date": data.index[i],
             "Entry date": data.index[entry_i],
             "Exit date": data.index[exit_i],
-            "Direction": "LONG" if direction == 1 else "SHORT",
+            "Direction": "LONG" if side == 1 else "SHORT",
             "Probability LONG": data["probability_long"].iloc[i],
             "Entry": entry,
             "Exit": exit_price,
@@ -100,8 +106,7 @@ def make_backtest(prices, probabilities, cost):
             "Net PnL": net
         })
 
-        # Nessuna posizione sovrapposta
-        i = exit_i
+        i = exit_i + 1
 
     trades = pd.DataFrame(trades)
 
@@ -259,3 +264,4 @@ try:
 except Exception as e:
     st.error(f"Errore: {e}")
     st.exception(e)
+
