@@ -162,25 +162,33 @@ try:
         c3.metric("Max drawdown (punti)", f"{max_dd:.2f}")
         c4.metric("Trade positivi", f"{win_rate:.1f}%")
 
-        # Metriche esclusivamente out-of-sample dal 03/01/2023
-        st.subheader("Risultati out-of-sample — dal 03/01/2023")
 
-        oos_trades = trades[
-            pd.to_datetime(trades["Signal date"]) >= pd.Timestamp("2023-01-03")
-        ].copy()
+        # Backtest OOS indipendente: stesso intervallo del test originale
+        st.subheader("Risultati out-of-sample — 03/01/2023 → 21/10/2026")
+
+        oos_mask = (
+            (prices.index >= pd.Timestamp("2023-01-03")) &
+            (prices.index <= pd.Timestamp("2026-10-21"))
+        )
+
+        oos_prices = prices.loc[oos_mask]
+        oos_probabilities = probabilities.reindex(oos_prices.index)
+
+        _, oos_trades, oos_equity, oos_drawdown = make_backtest(
+            oos_prices, oos_probabilities, cost
+        )
 
         if not oos_trades.empty:
-            oos_daily = pd.Series(0.0, index=prices.index)
-            oos_pnl_by_date = oos_trades.groupby("Exit date")["Net PnL"].sum()
-            oos_daily.loc[oos_pnl_by_date.index] = oos_pnl_by_date
-
-            oos_equity = oos_daily.cumsum()
-            oos_drawdown = oos_equity - oos_equity.cummax()
-
             o1, o2, o3 = st.columns(3)
             o1.metric("Trade OOS", f"{len(oos_trades)}")
-            o2.metric("P&L netto OOS (punti)", f"{oos_trades['Net PnL'].sum():.2f}")
-            o3.metric("Max drawdown OOS (punti)", f"{oos_drawdown.min():.2f}")
+            o2.metric(
+                "P&L netto OOS (punti)",
+                f"{oos_trades['Net PnL'].sum():.2f}"
+            )
+            o3.metric(
+                "Max drawdown OOS (punti)",
+                f"{oos_drawdown.min():.2f}"
+            )
         else:
             st.warning("Nessun trade OOS nel periodo selezionato.")
 
@@ -251,8 +259,3 @@ try:
 except Exception as e:
     st.error(f"Errore: {e}")
     st.exception(e)
-
-
-
-
-
