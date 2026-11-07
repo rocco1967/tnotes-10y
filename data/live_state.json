@@ -1,15 +1,22 @@
 {
-  "last_processed_date": "2026-11-03",
-  "pending_signal": null,
-  "position": {
+  "last_processed_date": "2026-11-06",
+  "pending_signal": {
+    "date": "2026-11-06",
     "direction": "LONG",
-    "side": 1,
-    "signal_date": "2026-10-30",
-    "probability": 0.5007068057961208,
-    "entry_date": "2026-11-02",
-    "entry": 106.640625,
-    "stop_price": 105.890625,
-    "holding_sessions": 2
+    "probability": 0.5007068057961208
   },
-  "trades": []
+  "position": null,
+  "trades": [
+    {
+      "Signal date": "2026-10-30",
+      "Entry date": "2026-11-02",
+      "Exit date": "2026-11-06",
+      "Direction": "LONG",
+      "Entry": 106.640625,
+      "Exit": 107.109375,
+      "Reason": "Scadenza 5 sessioni",
+      "Gross PnL": 0.46875,
+      "Net PnL": 0.43875
+    }
+  ]
 }
