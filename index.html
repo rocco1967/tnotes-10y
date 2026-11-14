@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TNotes-10Y | Quantitative Trading Model</title>
+<style>
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    background: #0b1220;
+    color: #e8edf5;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+}
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 50px 24px;
+}
+header {
+    border-bottom: 1px solid #263449;
+    padding-bottom: 28px;
+}
+.tag {
+    color: #55c5b4;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+h1 {
+    font-size: 42px;
+    margin: 12px 0 5px;
+}
+.subtitle {
+    color: #aab7ca;
+    font-size: 17px;
+}
+section { margin-top: 42px; }
+h2 { font-size: 22px; margin-bottom: 14px; }
+p { color: #b8c4d6; }
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 22px;
+}
+.stat {
+    background: #131f32;
+    border: 1px solid #263449;
+    border-radius: 12px;
+    padding: 20px;
+}
+.stat-label {
+    color: #91a2ba;
+    font-size: 13px;
+}
+.stat-value {
+    font-size: 27px;
+    font-weight: bold;
+    margin-top: 7px;
+}
+.green { color: #55c5b4; }
+.button {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 13px 22px;
+    border-radius: 8px;
+    background: #55c5b4;
+    color: #081521;
+    font-weight: bold;
+    text-decoration: none;
+}
+.button:hover { background: #79d8c9; }
+.note {
+    background: #131f32;
+    border-left: 3px solid #55c5b4;
+    padding: 16px 20px;
+    border-radius: 5px;
+}
+footer {
+    margin-top: 55px;
+    padding-top: 20px;
+    border-top: 1px solid #263449;
+    color: #8292a9;
+    font-size: 13px;
+}
+@media(max-width:600px) {
+    h1 { font-size: 32px; }
+    .container { padding: 32px 18px; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+    <div class="tag">Systematic Trading Research</div>
+    <h1>TNotes-10Y</h1>
+    <div class="subtitle">
+        A CatBoost-based directional model for 10-Year US Treasury Note Futures (ZN=F)
+    </div>
+</header>
+
+<section>
+    <h2>Overview</h2>
+    <p>
+        TNotes-10Y is a quantitative research project designed to estimate
+        the five-session forward direction of 10-Year US Treasury Note Futures.
+        The model uses historical price and volatility features and a
+        CatBoost classification algorithm.
+    </p>
+    <p>
+        The project combines historical out-of-sample evaluation with a
+        daily paper-trading signal.
+    </p>
+</section>
+
+<section>
+    <h2>Out-of-Sample Backtest</h2>
+    <p>Evaluation period: January 3, 2023 – October 21, 2026</p>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-label">Total Trades</div>
+            <div class="stat-value">181</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Net P&amp;L</div>
+            <div class="stat-value green">+6.13 pts</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Maximum Drawdown</div>
+            <div class="stat-value">−8.32 pts</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Winning Trades</div>
+            <div class="stat-value">50.3%</div>
+        </div>
+    </div>
+    <p>
+        Historical results are out-of-sample and include an assumed
+        round-trip transaction cost of 0.03 points.
+    </p>
+</section>
+
+<section>
+    <h2>Live Paper Signal</h2>
+    <p>
+        The application updates its directional estimate using the latest
+        available completed daily market data. Signals are intended for
+        paper trading and research purposes.
+    </p>
+    <a class="button" href="https://tnotes-10y.streamlit.app/" target="_blank" rel="noopener">
+        OPEN LIVE APPLICATION →
+    </a>
+</section>
+
+<section>
+    <h2>Methodology</h2>
+    <div class="note">
+        <p>
+            Model: CatBoost Classifier<br>
+            Instrument: 10-Year US Treasury Note Futures (ZN=F)<br>
+            Forecast horizon: 5 trading sessions<br>
+            Evaluation: Out-of-sample historical backtest
+        </p>
+    </div>
+</section>
+
+<footer>
+    TNotes-10Y · Quantitative Research Project<br>
+    Historical performance does not guarantee future results.
+    This project is for research and educational purposes only.
+</footer>
+
+</div>
+</body>
+</html>
