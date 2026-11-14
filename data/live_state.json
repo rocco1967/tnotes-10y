@@ -1,11 +1,16 @@
 {
-  "last_processed_date": "2026-11-12",
-  "pending_signal": {
-    "date": "2026-11-12",
+  "last_processed_date": "2026-11-13",
+  "pending_signal": null,
+  "position": {
     "direction": "LONG",
-    "probability": 0.5026236188051261
+    "side": 1,
+    "signal_date": "2026-11-12",
+    "probability": 0.5026236188051261,
+    "entry_date": "2026-11-13",
+    "entry": 105.296875,
+    "stop_price": 104.546875,
+    "holding_sessions": 1
   },
-  "position": null,
   "trades": [
     {
       "Signal date": "2026-10-30",
