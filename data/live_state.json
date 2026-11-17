@@ -1,5 +1,5 @@
 {
-  "last_processed_date": "2026-11-13",
+  "last_processed_date": "2026-11-16",
   "pending_signal": null,
   "position": {
     "direction": "LONG",
@@ -9,7 +9,7 @@
     "entry_date": "2026-11-13",
     "entry": 105.296875,
     "stop_price": 104.546875,
-    "holding_sessions": 1
+    "holding_sessions": 2
   },
   "trades": [
     {
